@@ -7,7 +7,7 @@ matrix:
     - if: repo = arvidn/libtorrent
       env: variant=release sonar_scan=1 toolset=gcc
     - env: variant=release toolset=gcc check_headers=1 python=1
-    - env: variant=debug crypto=openssl docs=1 tests=1 examples=1 tools=1 toolset=darwin
+    - env: variant=debug crypto=openssl tests=1 examples=1 tools=1 toolset=darwin
       os: osx
       osx_image: xcode11.2
     - env: variant=debug crypto=openssl python=1 toolset=darwin ios=1
@@ -28,7 +28,7 @@ matrix:
           - gnutls-dev
 #    - env: variant=debug tests=1 crypto=wolfssl toolset=gcc sanitizer=on
     - env: variant=release coverage=1 tests=1 toolset=gcc-coverage python=1 python_dist=1
-    - env: dist=1 toolset=gcc install_boost=1
+    - env: dist=1 toolset=gcc install_boost=1 docs=1
       addons:
         apt:
           packages:
@@ -38,6 +38,8 @@ matrix:
           - python-aafigure
           - icoutils
           - graphviz
+          - hunspell
+          - imagemagick
     - env: cmake=1 toolset=gcc install_boost=1
       addons:
         apt:
@@ -112,13 +114,7 @@ before_install:
   # it's important to install the brew python version before any pip packages,
   # as the pip packages may break if the version of python they used gets pulled
   # from under them
-  - 'if [ "$docs" = "1" ]; then
-       travis_retry brew install graphviz hunspell imagemagick icoutils;
-       ${PIP} install docutils;
-       ${PIP} install Pygments;
-       ${PIP} install aafigure;
-    fi'
-  - 'if [[ "$python" == "1" || "$docs" == "1" ]]; then
+  - 'if [[ "$python" == "1" ]]; then
        which python3;
        which pip3;
        python3 --version;
